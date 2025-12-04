@@ -1,0 +1,48 @@
+{
+  "name": "bare-native",
+  "version": "0.0.0",
+  "description": "Native application development framework for Bare",
+  "exports": {
+    "./package": "./package.json",
+    ".": "./index.js"
+  },
+  "imports": {
+    "#window": {
+      "darwin": "./lib/window/darwin.js"
+    },
+    "#web-view": {
+      "darwin": "./lib/web-view/apple.js",
+      "ios": "./lib/web-view/apple.js"
+    }
+  },
+  "files": [
+    "index.js",
+    "lib"
+  ],
+  "scripts": {
+    "test": "prettier . --check && bare test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/holepunchto/bare-native.git"
+  },
+  "author": "Holepunch",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/holepunchto/bare-native/issues"
+  },
+  "homepage": "https://github.com/holepunchto/bare-native#readme",
+  "dependencies": {
+    "bare-app-kit": "^0.0.0",
+    "bare-events": "^2.8.2",
+    "bare-gtk": "^0.0.0",
+    "bare-web-kit": "^0.0.0",
+    "bare-web-kit-gtk": "^0.0.0",
+    "bare-win-ui": "^0.0.0"
+  },
+  "devDependencies": {
+    "brittle": "^3.3.2",
+    "prettier": "^3.4.2",
+    "prettier-config-holepunch": "^2.0.0"
+  }
+}
