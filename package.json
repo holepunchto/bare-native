@@ -8,7 +8,9 @@
   },
   "imports": {
     "#window": {
-      "darwin": "./lib/window/darwin.js"
+      "darwin": "./lib/window/darwin.js",
+      "linux": "./lib/window/linux.js",
+      "win32": "./lib/window/win32.js"
     },
     "#web-view": {
       "darwin": "./lib/web-view/apple.js",
