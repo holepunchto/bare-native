@@ -39,12 +39,13 @@
   },
   "homepage": "https://github.com/holepunchto/bare-native#readme",
   "dependencies": {
-    "bare-app-kit": "^0.0.0",
+    "bare-app-kit": "^0.1.0",
     "bare-events": "^2.8.2",
-    "bare-gtk": "^0.0.0",
-    "bare-web-kit": "^0.0.0",
-    "bare-web-kit-gtk": "^0.0.0",
-    "bare-win-ui": "^0.0.0"
+    "bare-gtk": "^0.1.0",
+    "bare-ui-kit": "^0.1.0",
+    "bare-web-kit": "^0.1.0",
+    "bare-web-kit-gtk": "^0.1.0",
+    "bare-win-ui": "^0.1.0"
   },
   "devDependencies": {
     "brittle": "^3.3.2",
