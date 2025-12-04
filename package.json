@@ -4,7 +4,8 @@
   "description": "Native application development framework for Bare",
   "exports": {
     "./package": "./package.json",
-    ".": "./index.js"
+    ".": "./index.js",
+    "./runtime": "./runtime.js"
   },
   "imports": {
     "#window": {
@@ -21,6 +22,7 @@
   },
   "files": [
     "index.js",
+    "runtime.js",
     "lib"
   ],
   "scripts": {
