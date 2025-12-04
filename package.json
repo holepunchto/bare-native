@@ -14,7 +14,9 @@
     },
     "#web-view": {
       "darwin": "./lib/web-view/apple.js",
-      "ios": "./lib/web-view/apple.js"
+      "ios": "./lib/web-view/apple.js",
+      "linux": "./lib/web-view/linux.js",
+      "win32": "./lib/web-view/win32.js"
     }
   },
   "files": [
