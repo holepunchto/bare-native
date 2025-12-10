@@ -19,7 +19,7 @@ window.show()
 <https://github.com/holepunchto/bare-build> is used to package your application code alongside a Bare runtime suitable for the target platform. Either install the tool globally or as a development dependency of your project:
 
 ```
-npm i [-g] bare-build
+npm i [-g|-D] bare-build
 ```
 
 Next, build your application for the target platform, telling `bare-build` to use the `bare-native` runtime:
