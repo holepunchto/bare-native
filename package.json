@@ -42,6 +42,7 @@
     "bare-app-kit": "^0.1.0",
     "bare-events": "^2.8.2",
     "bare-gtk": "^0.1.0",
+    "bare-ndk": "^0.1.0",
     "bare-ui-kit": "^0.1.0",
     "bare-web-kit": "^0.1.0",
     "bare-web-kit-gtk": "^0.1.0",
