@@ -1,6 +1,6 @@
 {
   "name": "bare-native",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Native application development framework for Bare",
   "exports": {
     "./package": "./package.json",
