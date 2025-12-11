@@ -12,8 +12,6 @@ npm i bare-native
 const { Window } = require('bare-native')
 
 const window = new Window(400, 250)
-
-window.show()
 ```
 
 <https://github.com/holepunchto/bare-build> is used to package your application code alongside a Bare runtime suitable for the target platform. Either install the tool globally or as a development dependency of your project:
