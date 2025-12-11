@@ -11,12 +11,14 @@
     "#window": {
       "darwin": "./lib/window/darwin.js",
       "linux": "./lib/window/linux.js",
+      "android": "./lib/window/android.js",
       "win32": "./lib/window/win32.js"
     },
     "#web-view": {
       "darwin": "./lib/web-view/apple.js",
       "ios": "./lib/web-view/apple.js",
       "linux": "./lib/web-view/linux.js",
+      "android": "./lib/web-view/android.js",
       "win32": "./lib/web-view/win32.js"
     }
   },
@@ -42,7 +44,7 @@
     "bare-app-kit": "^0.1.0",
     "bare-events": "^2.8.2",
     "bare-gtk": "^0.1.0",
-    "bare-ndk": "^0.1.0",
+    "bare-ndk": "^0.1.1",
     "bare-ui-kit": "^0.1.0",
     "bare-web-kit": "^0.1.0",
     "bare-web-kit-gtk": "^0.1.0",
