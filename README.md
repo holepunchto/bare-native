@@ -23,7 +23,7 @@ npm i [-g|-D] bare-build
 Next, build your application for the target platform, telling `bare-build` to use the `bare-native` runtime:
 
 ```
-bare-build --out <dir> --target <platform>-<arch> --runtime bare-native/runtime app.js
+bare-build --out <dir> --host <platform>-<arch> --runtime bare-native/runtime app.js
 ```
 
 ## License
