@@ -8,6 +8,13 @@
     "./runtime": "./runtime.js"
   },
   "imports": {
+    "#button": {
+      "darwin": "./lib/button/darwin.js",
+      "ios": "./lib/button/ios.js",
+      "linux": "./lib/button/linux.js",
+      "android": "./lib/button/android.js",
+      "win32": "./lib/button/win32.js"
+    },
     "#window": {
       "darwin": "./lib/window/darwin.js",
       "ios": "./lib/window/ios.js",
