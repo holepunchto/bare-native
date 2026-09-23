@@ -8,12 +8,19 @@
     "./runtime": "./runtime.js"
   },
   "imports": {
-    "#window": {
-      "darwin": "./lib/window/darwin.js",
-      "ios": "./lib/window/ios.js",
-      "linux": "./lib/window/linux.js",
-      "android": "./lib/window/android.js",
-      "win32": "./lib/window/win32.js"
+    "#text": {
+      "darwin": "./lib/text/darwin.js",
+      "ios": "./lib/text/ios.js",
+      "linux": "./lib/text/linux.js",
+      "android": "./lib/text/android.js",
+      "win32": "./lib/text/win32.js"
+    },
+    "#view": {
+      "darwin": "./lib/view/darwin.js",
+      "ios": "./lib/view/ios.js",
+      "linux": "./lib/view/linux.js",
+      "android": "./lib/view/android.js",
+      "win32": "./lib/view/win32.js"
     },
     "#web-view": {
       "darwin": "./lib/web-view/apple.js",
@@ -21,6 +28,13 @@
       "linux": "./lib/web-view/linux.js",
       "android": "./lib/web-view/android.js",
       "win32": "./lib/web-view/win32.js"
+    },
+    "#window": {
+      "darwin": "./lib/window/darwin.js",
+      "ios": "./lib/window/ios.js",
+      "linux": "./lib/window/linux.js",
+      "android": "./lib/window/android.js",
+      "win32": "./lib/window/win32.js"
     }
   },
   "files": [
@@ -45,13 +59,16 @@
   "homepage": "https://github.com/holepunchto/bare-native#readme",
   "dependencies": {
     "bare-app-kit": "^0.2.1",
+    "bare-core-animation": "^0.1.0",
+    "bare-core-text": "^0.1.0",
     "bare-events": "^2.8.2",
     "bare-gtk": "^0.2.1",
     "bare-ndk": "^0.2.1",
     "bare-ui-kit": "^0.2.1",
     "bare-web-kit": "^0.1.0",
     "bare-web-kit-gtk": "^0.2.0",
-    "bare-win-ui": "^0.2.1"
+    "bare-win-ui": "^0.2.1",
+    "bare-yoga": "^0.1.0"
   },
   "devDependencies": {
     "brittle": "^3.3.2",
