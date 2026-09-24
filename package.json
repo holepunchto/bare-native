@@ -15,6 +15,13 @@
       "android": "./lib/text/android.js",
       "win32": "./lib/text/win32.js"
     },
+    "#pointer": {
+      "darwin": "./lib/pointer/darwin.js",
+      "ios": "./lib/pointer/ios.js",
+      "linux": "./lib/pointer/linux.js",
+      "android": "./lib/pointer/android.js",
+      "win32": "./lib/pointer/win32.js"
+    },
     "#view": {
       "darwin": "./lib/view/darwin.js",
       "ios": "./lib/view/ios.js",
