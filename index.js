@@ -1,3 +1,4 @@
+exports.ScrollView = require('./lib/scroll-view')
 exports.Text = require('./lib/text')
 exports.View = require('./lib/view')
 exports.WebView = require('./lib/web-view')

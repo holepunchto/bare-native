@@ -22,6 +22,13 @@
       "android": "./lib/pointer/android.js",
       "win32": "./lib/pointer/win32.js"
     },
+    "#scroll-view": {
+      "darwin": "./lib/scroll-view/darwin.js",
+      "ios": "./lib/scroll-view/ios.js",
+      "android": "./lib/scroll-view/android.js",
+      "linux": "./lib/scroll-view/linux.js",
+      "win32": "./lib/scroll-view/win32.js"
+    },
     "#view": {
       "darwin": "./lib/view/darwin.js",
       "ios": "./lib/view/ios.js",
