@@ -15,6 +15,13 @@
       "android": "./lib/text/android.js",
       "win32": "./lib/text/win32.js"
     },
+    "#image": {
+      "darwin": "./lib/image/darwin.js",
+      "ios": "./lib/image/ios.js",
+      "android": "./lib/image/android.js",
+      "linux": "./lib/image/linux.js",
+      "win32": "./lib/image/win32.js"
+    },
     "#pointer": {
       "darwin": "./lib/pointer/darwin.js",
       "ios": "./lib/pointer/ios.js",
@@ -79,6 +86,7 @@
     "bare-gtk": "^0.2.1",
     "bare-ndk": "^0.2.1",
     "bare-ui-kit": "^0.2.1",
+    "bare-url": "^2.5.4",
     "bare-web-kit": "^0.1.0",
     "bare-web-kit-gtk": "^0.2.0",
     "bare-win-ui": "^0.2.1",

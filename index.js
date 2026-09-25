@@ -1,3 +1,4 @@
+exports.Image = require('./lib/image')
 exports.ScrollView = require('./lib/scroll-view')
 exports.Text = require('./lib/text')
 exports.TextFragment = require('./lib/text-fragment')
