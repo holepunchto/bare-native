@@ -15,6 +15,13 @@
       "android": "./lib/text/android.js",
       "win32": "./lib/text/win32.js"
     },
+    "#activity-indicator": {
+      "darwin": "./lib/activity-indicator/darwin.js",
+      "ios": "./lib/activity-indicator/ios.js",
+      "linux": "./lib/activity-indicator/linux.js",
+      "android": "./lib/activity-indicator/android.js",
+      "win32": "./lib/activity-indicator/win32.js"
+    },
     "#image": {
       "darwin": "./lib/image/darwin.js",
       "ios": "./lib/image/ios.js",
@@ -42,6 +49,13 @@
       "android": "./lib/scroll-view/android.js",
       "linux": "./lib/scroll-view/linux.js",
       "win32": "./lib/scroll-view/win32.js"
+    },
+    "#switch": {
+      "darwin": "./lib/switch/darwin.js",
+      "ios": "./lib/switch/ios.js",
+      "linux": "./lib/switch/linux.js",
+      "android": "./lib/switch/android.js",
+      "win32": "./lib/switch/win32.js"
     },
     "#view": {
       "darwin": "./lib/view/darwin.js",

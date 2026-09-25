@@ -1,5 +1,7 @@
+exports.ActivityIndicator = require('./lib/activity-indicator')
 exports.Image = require('./lib/image')
 exports.ScrollView = require('./lib/scroll-view')
+exports.Switch = require('./lib/switch')
 exports.Text = require('./lib/text')
 exports.TextFragment = require('./lib/text-fragment')
 exports.TextInput = require('./lib/text-input')
