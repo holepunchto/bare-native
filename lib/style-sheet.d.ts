@@ -63,12 +63,7 @@ declare namespace NativeStyleSheet {
     direction?: 'inherit' | 'ltr' | 'rtl'
     flexDirection?: 'row' | 'row-reverse' | 'column' | 'column-reverse'
     justifyContent?:
-      | 'flex-start'
-      | 'center'
-      | 'flex-end'
-      | 'space-between'
-      | 'space-around'
-      | 'space-evenly'
+      'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly'
     alignContent?: Align
     alignItems?: Align
     alignSelf?: Align

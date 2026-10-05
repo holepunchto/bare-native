@@ -9,6 +9,7 @@ lib/image.d.ts
 lib/keyboard.d.ts
 lib/node.d.ts
 lib/scroll-view.d.ts
+lib/style-sheet.d.ts
 lib/switch.d.ts
 lib/text-fragment.d.ts
 lib/text-input.d.ts

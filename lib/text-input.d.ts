@@ -51,13 +51,7 @@ declare class NativeTextInput {
 
 declare namespace NativeTextInput {
   export type KeyboardType =
-    | 'default'
-    | 'number-pad'
-    | 'decimal-pad'
-    | 'numeric'
-    | 'email-address'
-    | 'phone-pad'
-    | 'url'
+    'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad' | 'url'
 
   export type ReturnKeyType = 'default' | 'done' | 'go' | 'next' | 'search' | 'send'
 
