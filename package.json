@@ -187,7 +187,6 @@
     "bare-animation-frame": "^0.1.0",
     "bare-native-test": "^0.1.0",
     "bare-tap": "^1.1.0",
-    "brittle": "^3.3.2",
     "lunte": "^1.8.0",
     "prettier": "^3.4.2",
     "prettier-config-holepunch": "^2.0.0"
