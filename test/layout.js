@@ -1,4 +1,5 @@
 const { test } = require('bare-tap')
+const { Switch, Text, TextInput } = require('..')
 const { mount, view } = require('./helpers')
 
 test('a row shares its width between flexible children', (t) => {
@@ -108,6 +109,59 @@ test('a removed style property goes back to its default', (t) => {
   root.layout(100, 100)
 
   t.strictEqual(child.measure().width, 0, 'no width, and nothing to stretch it')
+})
+
+test('a border insets children', (t) => {
+  const child = view({ height: 10 })
+  const root = view({ borderWidth: 5 }, [child])
+
+  t.teardown(() => root.destroy())
+
+  root.layout(100, 100)
+
+  t.deepStrictEqual(frame(child), { x: 5, y: 5, width: 90, height: 10 })
+})
+
+test('an environment value follows the environment of the root', (t) => {
+  const child = view({ height: 10 })
+  const root = view({ paddingTop: 'env(safe-area-inset-top)' }, [child])
+
+  t.teardown(() => root.destroy())
+
+  root.env = { 'safe-area-inset-top': 20 }
+  root.layout(100, 100)
+
+  t.strictEqual(child.measure().y, 20)
+
+  root.env = { 'safe-area-inset-top': 40 }
+  root.layout(100, 100)
+
+  t.strictEqual(child.measure().y, 40, 'and again when it changes')
+})
+
+test('an environment variable nobody set is zero', (t) => {
+  const child = view({ height: 10 })
+  const root = view({ paddingTop: 'env(keyboard-inset-height)' }, [child])
+
+  t.teardown(() => root.destroy())
+
+  root.layout(100, 100)
+
+  t.strictEqual(child.measure().y, 0)
+})
+
+test('every primitive is measured within the window', async (t) => {
+  const nodes = [new Text('a'), new TextInput(), new Switch()]
+  const root = view({ padding: 10, gap: 10, alignItems: 'flex-start' }, nodes)
+
+  await mount(t, root)
+
+  for (const node of nodes) {
+    const { y, pageX, pageY } = node.measure()
+
+    t.strictEqual(pageX, 10, node.constructor.name)
+    t.strictEqual(pageY, y)
+  }
 })
 
 function frame(node) {

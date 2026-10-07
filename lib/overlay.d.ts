@@ -1,4 +1,12 @@
+import NativeWindow = require('./window')
+
 interface NativeOverlay {
+  /** Whether a report is being shown. */
+  readonly shown: boolean
+
+  /** The window the overlay draws in, or `null` when it has none. */
+  readonly window: NativeWindow | null
+
   /** Draw `report` in a window of its own, unless it is a transport failure. */
   show(report: NativeOverlay.Report): void
 
