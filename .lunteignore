@@ -8,6 +8,7 @@ lib/dimensions.d.ts
 lib/image.d.ts
 lib/keyboard.d.ts
 lib/node.d.ts
+lib/overlay.d.ts
 lib/scroll-view.d.ts
 lib/style-sheet.d.ts
 lib/switch.d.ts
