@@ -179,7 +179,7 @@
     "bare-url": "^2.5.4",
     "bare-web-kit": "^0.2.0",
     "bare-web-kit-gtk": "^0.3.1",
-    "bare-win-ui": "^0.3.2",
+    "bare-win-ui": "^0.3.4",
     "bare-yoga": "^0.1.1"
   },
   "devDependencies": {
