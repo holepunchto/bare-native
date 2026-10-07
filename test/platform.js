@@ -34,13 +34,16 @@ test('no keyboard covers a window nobody is typing in', async (t) => {
   t.doesNotThrow(() => Keyboard.dismiss(), 'and dismissing it is harmless')
 })
 
-// The clipboard belongs to whoever runs the tests.
+// The clipboard belongs to whoever runs the tests, but reading what another
+// app copied raises a paste prompt on iOS.
 test('text written to the clipboard is read back', async (t) => {
   await mount(t, view({ flex: 1 }))
 
-  const before = await Clipboard.getString()
+  if (Bare.platform !== 'ios') {
+    const before = await Clipboard.getString()
 
-  t.teardown(() => Clipboard.setString(before))
+    t.teardown(() => Clipboard.setString(before))
+  }
 
   Clipboard.setString('bare-native')
 
