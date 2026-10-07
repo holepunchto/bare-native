@@ -34,4 +34,8 @@ jobs:
     name: Test / ${{ matrix.platform }}
     steps:
       - uses: holepunchto/actions/bare-base@v1
+      - uses: holepunchto/actions/setup-gtk@v1
+        with:
+          webkit: true
+      - uses: holepunchto/actions/setup-windows-app-runtime@v1
       - run: npm test

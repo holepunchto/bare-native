@@ -1,0 +1,8 @@
+require('./test/style')
+require('./test/tree')
+require('./test/layout')
+require('./test/text')
+require('./test/scroll-view')
+require('./test/controls')
+require('./test/image')
+require('./test/window')
