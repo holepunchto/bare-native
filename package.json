@@ -98,8 +98,8 @@
       "win32": "./lib/keyboard/none.js"
     },
     "#measure": {
-      "darwin": "./lib/measure/darwin.js",
-      "ios": "./lib/measure/ios.js",
+      "darwin": "./lib/measure/apple.js",
+      "ios": "./lib/measure/apple.js",
       "linux": "./lib/measure/linux.js",
       "android": "./lib/measure/android.js",
       "win32": "./lib/measure/win32.js"
