@@ -8,6 +8,10 @@
       "types": "./index.d.ts",
       "default": "./index.js"
     },
+    "./overlay": {
+      "types": "./lib/overlay.d.ts",
+      "default": "./lib/overlay.js"
+    },
     "./runtime": "./runtime.js"
   },
   "imports": {
@@ -38,6 +42,13 @@
       "android": "./lib/text-input/android.js",
       "linux": "./lib/text-input/linux.js",
       "win32": "./lib/text-input/win32.js"
+    },
+    "#overlay": {
+      "darwin": "./lib/overlay/darwin.js",
+      "ios": "./lib/overlay/ios.js",
+      "linux": "./lib/overlay/linux.js",
+      "android": "./lib/overlay/android.js",
+      "win32": "./lib/overlay/win32.js"
     },
     "#path": {
       "darwin": "./lib/path/darwin.js",
