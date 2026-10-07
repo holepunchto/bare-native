@@ -1,5 +1,5 @@
 const { test } = require('bare-tap')
-const { view } = require('./helpers')
+const { mount, view } = require('./helpers')
 
 test('a row shares its width between flexible children', (t) => {
   const a = view({ flex: 1 })
@@ -27,7 +27,7 @@ test('padding, margin and gap offset children', (t) => {
   t.deepStrictEqual(frame(b), { x: 20, y: 34, width: 160, height: 10 })
 })
 
-test('a node is measured within its parent and within the root', (t) => {
+test('a node is measured within its parent', (t) => {
   const inner = view({ width: 10, height: 10, marginLeft: 7 })
   const middle = view({ padding: 10 }, [inner])
   const root = view({ padding: 5 }, [middle])
@@ -36,12 +36,25 @@ test('a node is measured within its parent and within the root', (t) => {
 
   root.layout(100, 100)
 
-  const measured = inner.measure()
+  const { x, y } = inner.measure()
 
-  t.strictEqual(measured.x, 17, 'within its parent')
-  t.strictEqual(measured.y, 10)
-  t.strictEqual(measured.pageX, 22, 'within the root')
-  t.strictEqual(measured.pageY, 15)
+  t.strictEqual(x, 17)
+  t.strictEqual(y, 10)
+})
+
+// Where a node lands in the window is the toolkit's answer, so it is asked of
+// a tree in a window once the toolkit has placed it.
+test('a node is measured within the window and against another node', async (t) => {
+  const inner = view({ width: 10, height: 10, marginLeft: 7 })
+  const middle = view({ padding: 10 }, [inner])
+  const root = view({ padding: 5 }, [middle])
+
+  await mount(t, root)
+
+  const { pageX, pageY } = inner.measure()
+
+  t.strictEqual(pageX, 22)
+  t.strictEqual(pageY, 15)
 
   t.deepStrictEqual(inner.measureLayout(middle), { x: 17, y: 10, width: 10, height: 10 })
 })

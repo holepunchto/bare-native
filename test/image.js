@@ -6,7 +6,7 @@ test('an image that cannot be read reports an error a turn later', async (t) => 
   const image = new Image()
   const root = view({}, [image])
 
-  mount(t, root)
+  await mount(t, root)
 
   let reported = false
 
@@ -32,7 +32,7 @@ test('an image with nobody listening for errors does not throw', async (t) => {
   const image = new Image()
   const root = view({}, [image])
 
-  mount(t, root)
+  await mount(t, root)
 
   image.source = '/this/file/does/not/exist.png'
 

@@ -2,27 +2,32 @@ const { test } = require('bare-tap')
 const { ScrollView } = require('..')
 const { mount, view } = require('./helpers')
 
-function list(count) {
+// Taller than the window on every platform, so that there is always something
+// to scroll.
+const ROWS = 40
+const ROW = 50
+
+function list() {
   const scroll = new ScrollView()
 
   scroll.style = { flex: 1 }
 
-  for (let i = 0; i < count; i++) scroll.appendChild(view({ height: 50 }))
+  for (let i = 0; i < ROWS; i++) scroll.appendChild(view({ height: ROW }))
 
   return scroll
 }
 
 test('children are added to the content', (t) => {
-  const scroll = list(3)
+  const scroll = list()
 
   t.teardown(() => scroll.destroy())
 
-  t.strictEqual(scroll.children.length, 3)
+  t.strictEqual(scroll.children.length, ROWS)
   t.deepStrictEqual(scroll.content.children, scroll.children)
 })
 
 test('an offset before the first pass is zero', (t) => {
-  const scroll = list(20)
+  const scroll = list()
 
   t.teardown(() => scroll.destroy())
 
@@ -31,25 +36,21 @@ test('an offset before the first pass is zero', (t) => {
   t.strictEqual(scroll.contentOffset.y, 0)
 })
 
-test('the content takes its natural size along the axis', (t) => {
-  const scroll = list(20)
-  const root = view({ flex: 1 }, [scroll])
+test('the content takes its natural size along the axis', async (t) => {
+  const scroll = list()
 
-  mount(t, root)
+  const window = await mount(t, view({ flex: 1 }, [scroll]))
 
-  root.layout(200, 300)
-
-  t.strictEqual(scroll.measure().height, 300, 'the viewport is its box')
-  t.strictEqual(scroll.content.measure().height, 1000, 'the content is all of its children')
+  t.strictEqual(scroll.measure().height, window.size.height, 'the viewport is its box')
+  t.strictEqual(scroll.content.measure().height, ROWS * ROW, 'the content is all of its children')
 })
 
-test('an offset is clamped to what there is to scroll', (t) => {
-  const scroll = list(20)
-  const root = view({ flex: 1 }, [scroll])
+test('an offset is clamped to what there is to scroll', async (t) => {
+  const scroll = list()
 
-  mount(t, root)
+  const window = await mount(t, view({ flex: 1 }, [scroll]))
 
-  root.layout(200, 300)
+  const end = ROWS * ROW - window.size.height
 
   scroll.contentOffset = { y: 100 }
 
@@ -57,7 +58,7 @@ test('an offset is clamped to what there is to scroll', (t) => {
 
   scroll.contentOffset = { y: 100000 }
 
-  t.strictEqual(scroll.contentOffset.y, 700, 'past the end')
+  t.strictEqual(scroll.contentOffset.y, end, 'past the end')
 
   scroll.contentOffset = { y: -50 }
 

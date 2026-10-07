@@ -1,3 +1,4 @@
+const { afterAnimationFrame } = require('bare-animation-frame')
 const { View, Window } = require('..')
 
 // A window cannot be closed through this layer, and on iOS and Android there
@@ -5,7 +6,9 @@ const { View, Window } = require('..')
 let window = null
 let empty = null
 
-exports.mount = function mount(t, root) {
+// GTK and XAML lay out on their own frames rather than during the call, so the
+// new content is only placed once a frame has been drawn.
+exports.mount = async function mount(t, root) {
   if (window === null) {
     empty = new View()
     window = new Window(400, 300).content(empty).show()
@@ -18,6 +21,8 @@ exports.mount = function mount(t, root) {
 
     root.destroy()
   })
+
+  await afterAnimationFrame()
 
   return window
 }

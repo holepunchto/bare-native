@@ -6,7 +6,7 @@ test('writing a value from code emits nothing', async (t) => {
   const input = new TextInput()
   const root = view({ padding: 10 }, [input])
 
-  mount(t, root)
+  await mount(t, root)
 
   const events = []
 
@@ -68,7 +68,7 @@ test('writing a switch from code emits nothing', async (t) => {
   const toggle = new Switch()
   const root = view({ padding: 10 }, [toggle])
 
-  mount(t, root)
+  await mount(t, root)
 
   let changes = 0
 
@@ -82,12 +82,12 @@ test('writing a switch from code emits nothing', async (t) => {
   t.strictEqual(changes, 0)
 })
 
-test('controls measure to a natural size', (t) => {
+test('controls measure to a natural size', async (t) => {
   const input = new TextInput()
   const toggle = new Switch()
   const root = view({ alignItems: 'flex-start' }, [input, toggle])
 
-  mount(t, root)
+  await mount(t, root)
 
   root.layout(400, 300)
 

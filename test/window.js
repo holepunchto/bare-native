@@ -2,10 +2,10 @@ const { test } = require('bare-tap')
 const { Appearance, Dimensions } = require('..')
 const { mount, view } = require('./helpers')
 
-test('a window lays out its content at its size', (t) => {
+test('a window lays out its content at its size', async (t) => {
   const root = view({ flex: 1 })
 
-  const window = mount(t, root)
+  const window = await mount(t, root)
 
   const { width, height } = window.size
 
@@ -17,8 +17,8 @@ test('a window lays out its content at its size', (t) => {
   t.strictEqual(measured.height, height)
 })
 
-test('the window dimensions are the size of the window', (t) => {
-  const window = mount(t, view({ flex: 1 }))
+test('the window dimensions are the size of the window', async (t) => {
+  const window = await mount(t, view({ flex: 1 }))
 
   const { width, height, scale, fontScale } = Dimensions.get('window')
 
@@ -28,8 +28,8 @@ test('the window dimensions are the size of the window', (t) => {
   t.ok(fontScale > 0, 'and a font scale')
 })
 
-test('the screen is at least as large as the window', (t) => {
-  const window = mount(t, view({ flex: 1 }))
+test('the screen is at least as large as the window', async (t) => {
+  const window = await mount(t, view({ flex: 1 }))
 
   const screen = Dimensions.get('screen')
 
@@ -37,8 +37,8 @@ test('the screen is at least as large as the window', (t) => {
   t.ok(screen.height >= window.size.height)
 })
 
-test('the color scheme is light or dark', (t) => {
-  mount(t, view({ flex: 1 }))
+test('the color scheme is light or dark', async (t) => {
+  await mount(t, view({ flex: 1 }))
 
   t.ok(['light', 'dark'].includes(Appearance.getColorScheme()))
 })
