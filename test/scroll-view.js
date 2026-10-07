@@ -1,9 +1,9 @@
 const { test } = require('bare-tap')
+const { afterAnimationFrame } = require('bare-animation-frame')
 const { ScrollView } = require('..')
 const { mount, view } = require('./helpers')
 
-// Taller than the window on every platform, so that there is always something
-// to scroll.
+// Taller than the window on every platform.
 const ROWS = 40
 const ROW = 50
 
@@ -71,4 +71,20 @@ test('the axis is settled when the view is made', (t) => {
   t.teardown(() => scroll.destroy())
 
   t.strictEqual(scroll.horizontal, true)
+})
+
+test('scrolling moves where the content lands in the window', async (t) => {
+  const scroll = list()
+
+  await mount(t, view({ flex: 1 }, [scroll]))
+
+  const row = scroll.children[4]
+
+  const before = row.measure().pageY
+
+  scroll.contentOffset = { y: 100 }
+
+  await afterAnimationFrame()
+
+  t.strictEqual(row.measure().pageY, before - 100)
 })

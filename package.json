@@ -170,7 +170,7 @@
   "homepage": "https://github.com/holepunchto/bare-native#readme",
   "dependencies": {
     "bare-app-kit": "^0.3.0",
-    "bare-core-animation": "^0.1.0",
+    "bare-core-animation": "^0.1.2",
     "bare-core-text": "^0.1.0",
     "bare-events": "^2.8.2",
     "bare-gtk": "^0.3.0",

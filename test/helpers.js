@@ -1,13 +1,12 @@
 const { afterAnimationFrame } = require('bare-animation-frame')
 const { View, Window } = require('..')
 
-// A window cannot be closed through this layer, and on iOS and Android there
-// is only ever one, so every test shares a window and swaps its content.
+// A window cannot be closed, and iOS and Android only have one, so the tests
+// share a window and swap its content.
 let window = null
 let empty = null
 
-// GTK and XAML lay out on their own frames rather than during the call, so the
-// new content is only placed once a frame has been drawn.
+// GTK and XAML only place new content on their next frame.
 exports.mount = async function mount(t, root) {
   if (window === null) {
     empty = new View()
