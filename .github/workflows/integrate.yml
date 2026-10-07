@@ -31,12 +31,15 @@ jobs:
             platform: darwin
           - os: windows-latest
             platform: win32
+          - os: macos-latest
+            platform: ios
+            tags: -simulator
     runs-on: ${{ matrix.os }}
-    name: Test / ${{ matrix.platform }}
+    name: Test / ${{ matrix.platform }}${{ matrix.tags }}
     steps:
       - uses: holepunchto/actions/bare-base@v1
       - uses: holepunchto/actions/setup-gtk@v1
         with:
           webkit: true
       - uses: holepunchto/actions/setup-windows-app-runtime@v1
-      - run: npm test
+      - run: npm test -- --platform ${{ matrix.platform }}
