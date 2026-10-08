@@ -164,6 +164,95 @@ test('every primitive is measured within the window', async (t) => {
   }
 })
 
+test('an absolute child is placed against its parent and takes no room', (t) => {
+  const pinned = view({ position: 'absolute', top: 5, right: 10, width: 20, height: 20 })
+  const flowing = view({ height: 10 })
+  const root = view({ padding: 30 }, [pinned, flowing])
+
+  t.teardown(() => root.destroy())
+
+  root.layout(200, 100)
+
+  t.deepStrictEqual(frame(pinned), { x: 170, y: 5, width: 20, height: 20 }, 'from the edges')
+  t.deepStrictEqual(frame(flowing), { x: 30, y: 30, width: 140, height: 10 }, 'not displaced')
+})
+
+test('a child that is not displayed takes no room', (t) => {
+  const hidden = view({ height: 10, display: 'none' })
+  const shown = view({ height: 10 })
+  const root = view({}, [hidden, shown])
+
+  t.teardown(() => root.destroy())
+
+  root.layout(100, 100)
+
+  t.strictEqual(shown.measure().y, 0)
+})
+
+test('a size is held between its minimum and maximum', (t) => {
+  const narrow = view({ width: 10, minWidth: 30, height: 10 })
+  const wide = view({ flex: 1, maxWidth: 50, height: 10 })
+  const root = view({ flexDirection: 'row' }, [narrow, wide])
+
+  t.teardown(() => root.destroy())
+
+  root.layout(200, 100)
+
+  t.strictEqual(narrow.measure().width, 30, 'raised to the minimum')
+  t.strictEqual(wide.measure().width, 50, 'capped at the maximum')
+})
+
+test('an aspect ratio sets the side that is left open', (t) => {
+  const child = view({ width: 80, aspectRatio: 2 })
+  const root = view({ alignItems: 'flex-start' }, [child])
+
+  t.teardown(() => root.destroy())
+
+  root.layout(200, 200)
+
+  t.strictEqual(child.measure().height, 40)
+})
+
+test('wrapping moves children that do not fit onto another line', (t) => {
+  const children = [0, 1, 2].map(() => view({ width: 40, height: 10 }))
+  const root = view({ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-start' }, children)
+
+  t.teardown(() => root.destroy())
+
+  root.layout(100, 100)
+
+  t.deepStrictEqual(
+    children.map((child) => [child.measure().x, child.measure().y]),
+    [
+      [0, 0],
+      [40, 0],
+      [0, 10]
+    ]
+  )
+})
+
+test('children are aligned along and across the axis', (t) => {
+  const child = view({ width: 20, height: 10 })
+  const root = view({ justifyContent: 'flex-end', alignItems: 'center' }, [child])
+
+  t.teardown(() => root.destroy())
+
+  root.layout(100, 100)
+
+  t.deepStrictEqual(frame(child), { x: 40, y: 90, width: 20, height: 10 })
+})
+
+test('start and end are the left and right of a left to right layout', (t) => {
+  const child = view({ position: 'absolute', start: 10, end: 20, height: 10 })
+  const root = view({}, [child])
+
+  t.teardown(() => root.destroy())
+
+  root.layout(100, 100)
+
+  t.deepStrictEqual(frame(child), { x: 10, y: 0, width: 70, height: 10 })
+})
+
 function frame(node) {
   const { x, y, width, height } = node.measure()
 

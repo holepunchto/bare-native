@@ -98,8 +98,8 @@
       "win32": "./lib/keyboard/none.js"
     },
     "#measure": {
-      "darwin": "./lib/measure/darwin.js",
-      "ios": "./lib/measure/ios.js",
+      "darwin": "./lib/measure/apple.js",
+      "ios": "./lib/measure/apple.js",
       "linux": "./lib/measure/linux.js",
       "android": "./lib/measure/android.js",
       "win32": "./lib/measure/win32.js"
@@ -173,13 +173,13 @@
     "bare-core-animation": "^0.1.2",
     "bare-core-text": "^0.1.0",
     "bare-events": "^2.8.2",
-    "bare-gtk": "^0.3.0",
+    "bare-gtk": "^0.3.3",
     "bare-ndk": "^0.3.0",
     "bare-ui-kit": "^0.3.0",
     "bare-url": "^2.5.4",
     "bare-web-kit": "^0.2.0",
     "bare-web-kit-gtk": "^0.3.1",
-    "bare-win-ui": "^0.3.4",
+    "bare-win-ui": "^0.3.5",
     "bare-yoga": "^0.1.1"
   },
   "devDependencies": {

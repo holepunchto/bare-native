@@ -6,6 +6,7 @@ require('./test/text')
 require('./test/scroll-view')
 require('./test/controls')
 require('./test/image')
+require('./test/web-view')
 require('./test/window')
 require('./test/platform')
 

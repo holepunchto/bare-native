@@ -1,5 +1,5 @@
 const { test } = require('bare-tap')
-const { Image, Text, View } = require('..')
+const { Image, Text, View, WebView } = require('..')
 
 test('children are appended, inserted and removed in order', (t) => {
   const parent = new View()
@@ -73,12 +73,15 @@ test('invalid insertions throw', (t) => {
 test('a leaf cannot contain nodes', (t) => {
   const image = new Image()
   const text = new Text('a')
+  const web = new WebView()
 
   t.teardown(() => {
     image.destroy()
     text.destroy()
+    web.destroy()
   })
 
   t.throws(() => image.appendChild(new View()), /cannot contain children/)
   t.throws(() => text.appendChild(new View()))
+  t.throws(() => web.appendChild(new View()), /cannot contain children/)
 })
