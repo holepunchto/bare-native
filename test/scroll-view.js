@@ -1,7 +1,7 @@
 const { test } = require('bare-tap')
 const { afterAnimationFrame } = require('bare-animation-frame')
 const { ScrollView } = require('..')
-const { mount, view } = require('./helpers')
+const { mount, near, view } = require('./helpers')
 
 // Taller than the window on every platform.
 const ROWS = 40
@@ -41,7 +41,7 @@ test('the content takes its natural size along the axis', async (t) => {
 
   const window = await mount(t, view({ flex: 1 }, [scroll]))
 
-  t.strictEqual(scroll.measure().height, window.size.height, 'the viewport is its box')
+  near(t, scroll.measure().height, window.size.height, 'the viewport is its box')
   t.strictEqual(scroll.content.measure().height, ROWS * ROW, 'the content is all of its children')
 })
 
@@ -54,11 +54,11 @@ test('an offset is clamped to what there is to scroll', async (t) => {
 
   scroll.contentOffset = { y: 100 }
 
-  t.strictEqual(scroll.contentOffset.y, 100, 'inside the range')
+  near(t, scroll.contentOffset.y, 100, 'inside the range')
 
   scroll.contentOffset = { y: 100000 }
 
-  t.strictEqual(scroll.contentOffset.y, end, 'past the end')
+  near(t, scroll.contentOffset.y, end, 'past the end')
 
   scroll.contentOffset = { y: -50 }
 
@@ -86,5 +86,47 @@ test('scrolling moves where the content lands in the window', async (t) => {
 
   await afterAnimationFrame()
 
-  t.strictEqual(row.measure().pageY, before - 100)
+  near(t, row.measure().pageY, before - 100)
+})
+
+test('an anchored node follows what it is placed beside as it scrolls', async (t) => {
+  const scroll = list()
+  const box = view({ position: 'absolute', width: 20, height: 10 })
+  const root = view({ flex: 1 }, [scroll, box])
+
+  box.anchor = { to: scroll.children[4], side: 'bottom' }
+
+  await mount(t, root)
+
+  near(t, box.measure().y, ROW * 5)
+
+  scroll.contentOffset = { y: ROW }
+
+  await afterAnimationFrame()
+
+  near(t, box.measure().y, ROW * 4)
+})
+
+test('an anchored node is hidden while what it is placed beside is scrolled away', async (t) => {
+  const scroll = list()
+  const box = view({ position: 'absolute', width: 20, height: 10 })
+  const root = view({ flex: 1 }, [scroll, box])
+
+  box.anchor = { to: scroll.children[4], side: 'bottom' }
+
+  await mount(t, root)
+
+  t.notOk(box._anchorHidden, 'shown while it is in view')
+
+  scroll.contentOffset = { y: ROW * 6 }
+
+  await afterAnimationFrame()
+
+  t.ok(box._anchorHidden, 'hidden once it is not')
+
+  scroll.contentOffset = { y: 0 }
+
+  await afterAnimationFrame()
+
+  t.notOk(box._anchorHidden, 'and shown again')
 })

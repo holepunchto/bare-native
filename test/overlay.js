@@ -1,6 +1,6 @@
 const { test } = require('bare-tap')
 const EventEmitter = require('bare-events')
-const { Text } = require('..')
+const { ScrollView, Text } = require('..')
 const overlay = require('../lib/overlay')
 
 class Host extends EventEmitter {
@@ -45,6 +45,18 @@ function drawn(node) {
   for (const child of node.children) texts.push(...drawn(child))
 
   return texts
+}
+
+function trace(node) {
+  if (node instanceof ScrollView) return node
+
+  for (const child of node.children) {
+    const found = trace(child)
+
+    if (found !== null) return found
+  }
+
+  return null
 }
 
 test('a failure is shown with where it happened and what it left', (t) => {
@@ -120,6 +132,18 @@ test('the trace keeps dependency frames when the application has none', (t) => {
   })
 
   t.ok(drawn(shown.window.contentView).includes('at load (/app/node_modules/dep/index.js:1:1)'))
+})
+
+test('a failure with no frames has no trace', (t) => {
+  const { host, shown } = setup(t)
+
+  host.fail({ stack: 'Error: boom' })
+
+  t.strictEqual(trace(shown.window.contentView).style.display, 'none', 'hidden')
+
+  host.fail({ stack: 'Error: boom\n    at /app/index.js:10:3' })
+
+  t.strictEqual(trace(shown.window.contentView).style.display, 'flex', 'shown again')
 })
 
 test('a second failure replaces the first', (t) => {

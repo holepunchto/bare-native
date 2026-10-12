@@ -29,11 +29,11 @@ jobs:
             platform: linux
           - os: macos-latest
             platform: darwin
-          - os: windows-latest
-            platform: win32
           - os: macos-latest
             platform: ios
             tags: -simulator
+          - os: windows-latest
+            platform: win32
     runs-on: ${{ matrix.os }}
     name: Test / ${{ matrix.platform }}${{ matrix.tags }}
     steps:

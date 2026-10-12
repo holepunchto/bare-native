@@ -1,7 +1,7 @@
 const { test } = require('bare-tap')
 const { afterAnimationFrame } = require('bare-animation-frame')
 const { View } = require('..')
-const { mount, view } = require('./helpers')
+const { mount, near, view } = require('./helpers')
 
 test('a transform is a list of operations', (t) => {
   const node = new View()
@@ -43,6 +43,10 @@ test('a malformed transform is refused', (t) => {
   t.throws(() => {
     node.style = { transform: [{ rotate: 'sideways' }] }
   }, /as an angle/)
+
+  t.throws(() => {
+    node.style = { transform: [{ translateX: '10px' }] }
+  }, /as a number/)
 })
 
 test('a transform does not move the layout', (t) => {
@@ -68,5 +72,27 @@ test('a translation moves where a node lands in the window', async (t) => {
 
   await afterAnimationFrame()
 
-  t.strictEqual(child.measure().pageX, before + 30)
+  near(t, child.measure().pageX, before + 30)
+})
+
+test('a translation by a percentage is of the node itself', async (t) => {
+  const child = view({ width: 40, height: 20 })
+  const root = view({ padding: 10 }, [child])
+
+  await mount(t, root)
+
+  const before = child.measure()
+
+  child.style = {
+    width: 40,
+    height: 20,
+    transform: [{ translateX: '-50%' }, { translateY: '50%' }]
+  }
+
+  await afterAnimationFrame()
+
+  const after = child.measure()
+
+  near(t, after.pageX, before.pageX - 20)
+  near(t, after.pageY, before.pageY + 10)
 })

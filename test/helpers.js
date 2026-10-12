@@ -1,5 +1,5 @@
 const { afterAnimationFrame } = require('bare-animation-frame')
-const { View, Window } = require('..')
+const { Dimensions, View, Window } = require('..')
 
 // A window cannot be closed, and iOS and Android only have one, so the tests
 // share a window and swap its content.
@@ -24,6 +24,20 @@ exports.mount = async function mount(t, root) {
   await afterAnimationFrame()
 
   return window
+}
+
+// A layout is rounded to pixels, which a point is not always a whole number
+// of.
+exports.near = function near(t, actual, expected, message) {
+  const pixel = 1 / Dimensions.get('window').scale
+
+  const close =
+    typeof expected === 'number'
+      ? Math.abs(actual - expected) <= pixel
+      : Object.keys(expected).every((key) => Math.abs(actual[key] - expected[key]) <= pixel)
+
+  if (close) t.pass(message)
+  else t.deepStrictEqual(actual, expected, message)
 }
 
 exports.view = function view(style = {}, children = []) {
