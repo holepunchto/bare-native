@@ -1,6 +1,6 @@
 const { test } = require('bare-tap')
 const { Image } = require('..')
-const { mount, view } = require('./helpers')
+const { mount, near, view } = require('./helpers')
 
 const fixture = require.asset('./fixtures/image.png', __filename)
 
@@ -92,7 +92,7 @@ test('an image left to size itself takes its natural size', async (t) => {
 
   const { width, height } = image.measure()
 
-  t.deepStrictEqual({ width, height }, { width: 40, height: 20 })
+  near(t, { width, height }, { width: 40, height: 20 })
 })
 
 test('an image given one side keeps its ratio', async (t) => {
@@ -114,8 +114,8 @@ test('an image given one side keeps its ratio', async (t) => {
 
   root.layout(400, 300)
 
-  t.strictEqual(wide.measure().height, 50, 'a width sets the height')
-  t.strictEqual(tall.measure().width, 20, 'a height sets the width')
+  near(t, wide.measure().height, 50, 'a width sets the height')
+  near(t, tall.measure().width, 20, 'a height sets the width')
 })
 
 test('an image only reports the source it was given last', async (t) => {

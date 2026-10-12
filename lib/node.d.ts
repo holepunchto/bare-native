@@ -29,6 +29,21 @@ interface NativeNode<
   get env(): NativeNode.Env
   set env(value: Partial<NativeNode.Env> | null | undefined)
 
+  /**
+   * Place the node beside another node or a rectangle, as for a tooltip or a popover, or `null` to
+   * lay it out as usual. The node should be absolutely positioned. It is sized by the layout and
+   * placed in the same pass, on the other side if it does not fit, and over the target, inside
+   * its edge by `offset`, if it fits on neither. It is kept inside the border of its parent. It
+   * follows the scroll views between it and what it is placed beside, but not transforms, and is
+   * hidden while a scroll view or a box that clips has cut what it is placed beside out of view.
+   *
+   * A node anchored inside another anchored node follows that one instead of deciding for itself:
+   * it flips if the other flipped, may stand out of it, and is given no size if the other had to
+   * cover what it was placed beside. That is how an arrow on the edge of a tooltip is made.
+   */
+  get anchor(): NativeNode.Anchor | null
+  set anchor(value: NativeNode.AnchorOptions | null)
+
   readonly destroyed: boolean
 
   /** Throws if the node cannot contain children. */
@@ -54,6 +69,9 @@ interface NativeNode<
 
   /** The frame of the node relative to `node`. */
   measureLayout(node: NativeNode.Any): NativeNode.Frame
+
+  /** The margin, border and padding of the node, as resolved by its last layout. */
+  measureEdges(): NativeNode.Edges
 
   /** Lay out the tree with the node as its root at the given size, then flush it. */
   layout(width: number, height: number): void
@@ -91,11 +109,48 @@ declare namespace NativeNode {
   /** In points, or dp on Android. */
   export interface Frame extends Point, Size {}
 
+  /** In points, or dp on Android. */
+  export interface Insets {
+    top: number
+    right: number
+    bottom: number
+    left: number
+  }
+
+  export interface Edges {
+    margin: Insets
+    border: Insets
+    padding: Insets
+  }
+
   export interface Measurement extends Frame {
     /** The position of the node within the root, including scrolling and transforms. */
     pageX: number
     pageY: number
   }
+
+  export type Side = 'top' | 'right' | 'bottom' | 'left'
+
+  /** A node, a rectangle relative to the parent, or nothing to leave the node where it is. */
+  export type AnchorTarget = Any | Frame | null | undefined
+
+  export interface AnchorOptions {
+    /** What to place the node beside, or a function that returns it each time the node is placed. */
+    to: AnchorTarget | (() => AnchorTarget)
+    /** The side to place the node on if it fits there. Defaults to `bottom`. */
+    side?: Side
+    /** Where the node lines up along the side. Defaults to `center`. */
+    align?: 'start' | 'center' | 'end'
+    /** The distance between the node and what it is placed beside. Defaults to `0`. */
+    offset?: number
+    /**
+     * Size the node to the width, the height or both of what it is placed beside, instead of to
+     * its style. Defaults to `null`.
+     */
+    match?: 'width' | 'height' | 'both' | null
+  }
+
+  export type Anchor = Required<AnchorOptions>
 
   /** What the platform covers of the window. Every variable defaults to `0`. */
   export interface Env {

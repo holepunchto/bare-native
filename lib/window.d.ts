@@ -15,12 +15,18 @@ interface NativeWindow extends EventEmitter<NativeWindow.Events> {
   /** The size of the content area, or zero before `content()`. */
   readonly size: NativeNode.Size
 
+  /** How many pixels a point is on the display the window is on, which layout is rounded to. */
+  readonly scale: number
+
   show(): this
 
   /** Make `view` the root of the window and lay it out at the size of the window. */
   content(view: NativeNode.Any): this
 
-  /** Lay out the content at the size of the window. */
+  /**
+   * Lay out the content at the size of the window now. A tree is laid out again by itself after
+   * every change to it, so this is rarely needed.
+   */
   layout(): void
 }
 

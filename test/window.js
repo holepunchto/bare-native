@@ -1,6 +1,6 @@
 const { test } = require('bare-tap')
 const { Appearance, Dimensions } = require('..')
-const { mount, view } = require('./helpers')
+const { mount, near, view } = require('./helpers')
 
 test('a window lays out its content at its size', async (t) => {
   const root = view({ flex: 1 })
@@ -13,8 +13,8 @@ test('a window lays out its content at its size', async (t) => {
 
   const measured = root.measure()
 
-  t.strictEqual(measured.width, width)
-  t.strictEqual(measured.height, height)
+  near(t, measured.width, width)
+  near(t, measured.height, height)
 })
 
 test('the window dimensions are the size of the window', async (t) => {

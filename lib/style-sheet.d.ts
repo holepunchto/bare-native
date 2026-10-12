@@ -23,8 +23,17 @@ declare namespace NativeStyleSheet {
   /** A value that follows a variable of the environment of the root, such as `env(safe-area-inset-top)`. */
   export type Env = `env(${EnvName})`
 
-  /** A length in points, or dp on Android. There are no percentages and no `auto`. */
+  /** A length in points, or dp on Android. */
   export type Length = number | Env
+
+  /**
+   * A share of a box, such as `50%`. For a length it is of the parent, and for a translation it is
+   * of the node itself.
+   */
+  export type Percentage = `${number}%`
+
+  /** A length, a percentage or `auto`, which leaves the length for the layout to work out. */
+  export type Dimension = Length | Percentage | 'auto'
 
   /**
    * `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`, `rgb(r, g, b)`, `rgba(r, g, b, a)`, or the components
@@ -44,8 +53,8 @@ declare namespace NativeStyleSheet {
     | { scale: number }
     | { scaleX: number }
     | { scaleY: number }
-    | { translateX: number }
-    | { translateY: number }
+    | { translateX: number | Percentage }
+    | { translateY: number | Percentage }
 
   type Align =
     | 'auto'
@@ -74,46 +83,46 @@ declare namespace NativeStyleSheet {
     flex?: Length
     flexGrow?: Length
     flexShrink?: Length
-    flexBasis?: Length
+    flexBasis?: Dimension
     aspectRatio?: Length
 
-    width?: Length
-    height?: Length
-    minWidth?: Length
-    minHeight?: Length
-    maxWidth?: Length
-    maxHeight?: Length
+    width?: Dimension
+    height?: Dimension
+    minWidth?: Length | Percentage
+    minHeight?: Length | Percentage
+    maxWidth?: Length | Percentage
+    maxHeight?: Length | Percentage
 
-    gap?: Length
-    rowGap?: Length
-    columnGap?: Length
+    gap?: Length | Percentage
+    rowGap?: Length | Percentage
+    columnGap?: Length | Percentage
 
-    top?: Length
-    right?: Length
-    bottom?: Length
-    left?: Length
-    start?: Length
-    end?: Length
+    top?: Length | Percentage
+    right?: Length | Percentage
+    bottom?: Length | Percentage
+    left?: Length | Percentage
+    start?: Length | Percentage
+    end?: Length | Percentage
 
-    margin?: Length
-    marginTop?: Length
-    marginRight?: Length
-    marginBottom?: Length
-    marginLeft?: Length
-    marginStart?: Length
-    marginEnd?: Length
-    marginHorizontal?: Length
-    marginVertical?: Length
+    margin?: Dimension
+    marginTop?: Dimension
+    marginRight?: Dimension
+    marginBottom?: Dimension
+    marginLeft?: Dimension
+    marginStart?: Dimension
+    marginEnd?: Dimension
+    marginHorizontal?: Dimension
+    marginVertical?: Dimension
 
-    padding?: Length
-    paddingTop?: Length
-    paddingRight?: Length
-    paddingBottom?: Length
-    paddingLeft?: Length
-    paddingStart?: Length
-    paddingEnd?: Length
-    paddingHorizontal?: Length
-    paddingVertical?: Length
+    padding?: Length | Percentage
+    paddingTop?: Length | Percentage
+    paddingRight?: Length | Percentage
+    paddingBottom?: Length | Percentage
+    paddingLeft?: Length | Percentage
+    paddingStart?: Length | Percentage
+    paddingEnd?: Length | Percentage
+    paddingHorizontal?: Length | Percentage
+    paddingVertical?: Length | Percentage
 
     /** Only the uniform `borderWidth` is drawn. The edges only inset the children. */
     borderWidth?: Length

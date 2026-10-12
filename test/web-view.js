@@ -1,6 +1,6 @@
 const { test } = require('bare-tap')
 const { WebView } = require('..')
-const { mount, view } = require('./helpers')
+const { mount, near, view } = require('./helpers')
 
 test('a page loaded from markup forgets the URL and the other way around', async (t) => {
   const web = new WebView()
@@ -78,5 +78,5 @@ test('a web view is a box laid out like any other', async (t) => {
 
   const { x, y, width, height } = web.measure()
 
-  t.deepStrictEqual({ x, y, width, height }, { x: 10, y: 10, width: 380, height: 280 })
+  near(t, { x, y, width, height }, { x: 10, y: 10, width: 380, height: 280 })
 })
