@@ -17,6 +17,27 @@ test('a window lays out its content at its size', async (t) => {
   near(t, measured.height, height)
 })
 
+test('content that replaces destroyed content is laid out at the size of the window', async (t) => {
+  const destroyed = view({ flex: 1 })
+
+  const window = await mount(t, destroyed)
+
+  destroyed.destroy()
+
+  const root = view({ flex: 1 })
+
+  await mount(t, root)
+
+  const { width, height } = window.size
+
+  t.ok(width > 0 && height > 0, 'the window has room')
+
+  const measured = root.measure()
+
+  near(t, measured.width, width)
+  near(t, measured.height, height)
+})
+
 test('the window dimensions are the size of the window', async (t) => {
   const window = await mount(t, view({ flex: 1 }))
 
