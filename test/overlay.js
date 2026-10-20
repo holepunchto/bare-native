@@ -1,7 +1,9 @@
 const { test } = require('bare-tap')
+const AnimationFrameProvider = require('bare-animation-frame')
 const EventEmitter = require('bare-events')
-const { ScrollView, Text } = require('..')
+const { ScrollView, Text, View } = require('..')
 const overlay = require('../lib/overlay')
+const { pointer } = require('./helpers')
 
 class Host extends EventEmitter {
   constructor() {
@@ -45,6 +47,33 @@ function drawn(node) {
   for (const child of node.children) texts.push(...drawn(child))
 
   return texts
+}
+
+function button(node, label) {
+  if (
+    node instanceof View &&
+    node.children.some((child) => child instanceof Text && child.text === label)
+  ) {
+    return node
+  }
+
+  for (const child of node.children) {
+    const found = button(child, label)
+
+    if (found !== null) return found
+  }
+
+  return null
+}
+
+// The overlay lays out and draws on its next frame, as any window does, and
+// those are the frames of its own window rather than of whichever is active.
+async function press(t, shown, label) {
+  const node = button(shown.window.contentView, label)
+
+  await new AnimationFrameProvider(node.native).afterAnimationFrame()
+
+  await pointer(t).tap(node)
 }
 
 function trace(node) {
@@ -198,4 +227,27 @@ test('a failure after the overlay was taken away is shown again', (t) => {
 
   t.ok(shown.shown)
   t.ok(drawn(shown.window.contentView).includes('Error: second'))
+})
+
+test('pressing Dismiss takes the failure away', async (t) => {
+  const { host, shown } = setup(t)
+
+  host.fail({})
+
+  await press(t, shown, 'Dismiss')
+
+  t.strictEqual(shown.shown, false, 'hidden')
+
+  // Android only gets the application back by reloading it.
+  t.strictEqual(host.reloads, Bare.platform === 'android' ? 1 : 0, 'reloaded where it has to')
+})
+
+test('pressing Reload reloads the application', async (t) => {
+  const { host, shown } = setup(t)
+
+  host.fail({})
+
+  await press(t, shown, 'Reload')
+
+  t.strictEqual(host.reloads, 1)
 })
