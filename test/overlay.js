@@ -72,6 +72,61 @@ async function press(t, shown, label) {
 
   await new AnimationFrameProvider(node.native).afterAnimationFrame()
 
+  // TEMPORARY: diagnoses dropped overlay presses on the macOS runner.
+  if (Bare.platform === 'darwin') {
+    const AppKitApplication = require('bare-app-kit/application')
+    const view = node.native
+    const window = view.window
+    const root = shown.window.contentView.native
+    const start = Date.now()
+    const lines = []
+    let released = false
+
+    const state = () => {
+      const key = AppKitApplication.keyWindow
+
+      return JSON.stringify({
+        ms: Date.now() - start,
+        active: AppKitApplication.active,
+        key: window.keyWindow,
+        main: window.mainWindow,
+        visible: window.visible,
+        windowNumber: window.windowNumber,
+        appKey: key ? key.windowNumber : null
+      })
+    }
+
+    const log = (...args) => lines.push(['DIAGNOSTIC', label, ...args].join(' '))
+
+    log('before', state())
+
+    for (const [name, target] of [
+      ['button', view],
+      ['root', root]
+    ]) {
+      target.on('mouseDown', (e) => log(name, 'mouseDown', state(), JSON.stringify(e)))
+      target.on('mouseUp', (e) => log(name, 'mouseUp', state(), JSON.stringify(e)))
+    }
+
+    node.on('pointerdown', () => log('pointerdown', state()))
+    node.on('pointerup', () => {
+      released = true
+      log('pointerup', state())
+    })
+
+    try {
+      await pointer(t).tap(node)
+    } catch (err) {
+      log('threw', err.message)
+    }
+
+    log('after', state())
+
+    if (!released) for (const line of lines) console.log(line)
+
+    return
+  }
+
   await pointer(t).tap(node)
 }
 
@@ -228,25 +283,28 @@ test('a failure after the overlay was taken away is shown again', (t) => {
   t.ok(drawn(shown.window.contentView).includes('Error: second'))
 })
 
-test('pressing Dismiss takes the failure away', async (t) => {
-  const { host, shown } = setup(t)
+// TEMPORARY: repeats the presses to catch the macOS flake.
+for (let round = 0; round < (Bare.platform === 'darwin' ? 20 : 1); round++) {
+  test('pressing Dismiss takes the failure away', async (t) => {
+    const { host, shown } = setup(t)
 
-  host.fail({})
+    host.fail({})
 
-  await press(t, shown, 'Dismiss')
+    await press(t, shown, 'Dismiss')
 
-  t.strictEqual(shown.shown, false, 'hidden')
+    t.strictEqual(shown.shown, false, 'hidden')
 
-  // Android only gets the application back by reloading it.
-  t.strictEqual(host.reloads, Bare.platform === 'android' ? 1 : 0, 'reloaded where it has to')
-})
+    // Android only gets the application back by reloading it.
+    t.strictEqual(host.reloads, Bare.platform === 'android' ? 1 : 0, 'reloaded where it has to')
+  })
 
-test('pressing Reload reloads the application', async (t) => {
-  const { host, shown } = setup(t)
+  test('pressing Reload reloads the application', async (t) => {
+    const { host, shown } = setup(t)
 
-  host.fail({})
+    host.fail({})
 
-  await press(t, shown, 'Reload')
+    await press(t, shown, 'Reload')
 
-  t.strictEqual(host.reloads, 1)
-})
+    t.strictEqual(host.reloads, 1)
+  })
+}
