@@ -66,8 +66,7 @@ function button(node, label) {
   return null
 }
 
-// The overlay lays out and draws on its next frame, as any window does, and
-// those are the frames of its own window rather than of whichever is active.
+// The overlay lays out and draws on the next frame of its own window.
 async function press(t, shown, label) {
   const node = button(shown.window.contentView, label)
 

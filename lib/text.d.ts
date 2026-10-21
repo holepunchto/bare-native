@@ -4,7 +4,7 @@ import NativeTextFragment = require('./text-fragment')
 
 /** A paragraph of text, measured by the platform. It contains text fragments rather than nodes. */
 interface NativeText extends NativeNode<NativeNode.Events, NativeTextFragment> {
-  /** The text of the paragraph itself, without that of its fragments. */
+  /** The text of the paragraph, excluding its fragments. */
   text: string
 
   /** The most lines to draw, or `0` for no limit. */

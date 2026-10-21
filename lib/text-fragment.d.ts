@@ -1,13 +1,13 @@
 import NativeStyleSheet = require('./style-sheet')
 
-/** A run of text inside a `Text`, styled on its own. A fragment is not a node and has no box. */
+/** A run of text inside a `Text` with its own style. It is not a node and has no box. */
 interface NativeTextFragment {
   readonly parent: NativeTextFragment | null
 
-  /** A copy of the children of the fragment. */
+  /** A copy of the children. */
   readonly children: NativeTextFragment[]
 
-  /** The text of the fragment itself, without that of its children. */
+  /** The text of the fragment, excluding its children. */
   text: string
 
   /** `null` inherits the style of the parent. */

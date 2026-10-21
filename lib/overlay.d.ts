@@ -11,15 +11,15 @@ interface NativeOverlay {
   show(report: NativeOverlay.Report): void
 
   /**
-   * Take the window away. Unless `replaced` says the graph was just rebuilt, Android reloads the
-   * graph, as the overlay took the place of the application's content.
+   * Hide the window. Unless `replaced` says the graph was just rebuilt, Android reloads the graph,
+   * as the overlay replaced the application's content.
    */
   hide(replaced: boolean): void
 }
 
 /**
- * Draw the failures of a `bare-refresh` host on the device, and take them away when a refresh or
- * reload succeeds. Pass it to `attach` when building a development build.
+ * Draw the failures of a `bare-refresh` host on the device, and hide them when a refresh or reload
+ * succeeds. Pass it to `attach` in a development build.
  */
 declare function overlay(refresh: NativeOverlay.Host): NativeOverlay
 

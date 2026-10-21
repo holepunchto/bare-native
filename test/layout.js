@@ -244,8 +244,8 @@ test('a node is measured within its parent', (t) => {
   t.strictEqual(y, 10)
 })
 
-// Where a node lands in the window is the toolkit's answer, so it is asked of
-// a tree in a window once the toolkit has placed it.
+// Placement within the window is the toolkit's answer, so it is checked once
+// the toolkit has placed the tree.
 test('a node is measured within the window and against another node', async (t) => {
   const inner = view({ width: 10, height: 10, marginLeft: 7 })
   const middle = view({ padding: 10 }, [inner])

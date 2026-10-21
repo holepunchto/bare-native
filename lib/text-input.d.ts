@@ -3,7 +3,7 @@ import NativeNode = require('./node')
 import NativeStyleSheet = require('./style-sheet')
 
 /**
- * A field of editable text. Writing to it from code never emits `change`, `keypress` or
+ * An editable text field. Writes from code never emit `change`, `keypress` or
  * `selectionchange`.
  */
 interface NativeTextInput extends NativeControlNode<NativeTextInput.Events> {
@@ -45,7 +45,7 @@ interface NativeTextInput extends NativeControlNode<NativeTextInput.Events> {
 }
 
 declare class NativeTextInput {
-  /** The shape of an input is settled when it is made. Throws if it is both multiline and secure. */
+  /** The shape is fixed at construction. Throws if both multiline and secure. */
   constructor(opts?: { multiline?: boolean; secureTextEntry?: boolean })
 }
 

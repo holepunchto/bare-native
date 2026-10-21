@@ -1,7 +1,7 @@
 import NativeNode = require('./node')
 import NativeStyleSheet = require('./style-sheet')
 
-/** A web page. A web view cannot contain children. */
+/** A web page. It cannot contain children. */
 interface NativeWebView extends NativeNode<NativeNode.Events, never> {
   /** The URL last loaded, or `null` if the page was loaded from HTML. Setting it loads it. */
   get url(): string | null
@@ -12,8 +12,8 @@ interface NativeWebView extends NativeNode<NativeNode.Events, never> {
   set html(value: string | null | undefined)
 
   /**
-   * Whether the page can be inspected by the development tools of the platform. Defaults to
-   * `false`. On Android it applies to every web view of the application.
+   * Whether the platform dev tools can inspect the page. Defaults to `false`. On Android it
+   * applies to every web view in the application.
    */
   get inspectable(): boolean
   set inspectable(value: boolean | null | undefined)
