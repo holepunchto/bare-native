@@ -1,6 +1,6 @@
 const { test } = require('bare-tap')
 const { Appearance, Dimensions } = require('..')
-const { mount, near, view } = require('./helpers')
+const { mount, near, pointer, view } = require('./helpers')
 
 test('a window lays out its content at its size', async (t) => {
   const root = view({ flex: 1 })
@@ -36,6 +36,26 @@ test('content that replaces destroyed content is laid out at the size of the win
 
   near(t, measured.width, width)
   near(t, measured.height, height)
+})
+
+test('content that replaces destroyed content takes presses', async (t) => {
+  const destroyed = view({ flex: 1 })
+
+  await mount(t, destroyed)
+
+  destroyed.destroy()
+
+  const root = view({ flex: 1 })
+
+  await mount(t, root)
+
+  const events = []
+
+  root.on('pointerup', (event) => events.push(event))
+
+  await pointer(t).tap(root)
+
+  t.strictEqual(events.length, 1)
 })
 
 test('the window dimensions are the size of the window', async (t) => {
