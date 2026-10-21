@@ -1,4 +1,5 @@
 const { test } = require('bare-tap')
+const { Text } = require('..')
 const { mount, near, pointer, view } = require('./helpers')
 
 const TYPE = Bare.platform === 'ios' || Bare.platform === 'android' ? 'touch' : 'mouse'
@@ -134,5 +135,22 @@ test('a view that takes no pointer events lets a press through', async (t) => {
       ['below', 'pointerdown'],
       ['below', 'pointerup']
     ]
+  )
+})
+
+test('a press on text goes to the view around it', async (t) => {
+  const label = new Text('Press')
+  const outer = box({}, [label])
+  const press = await setup(t, view({ flex: 1 }, [outer]))
+
+  const events = []
+
+  record(outer, events)
+
+  await press.tap(label)
+
+  t.deepStrictEqual(
+    events.map((event) => event.type),
+    ['pointerdown', 'pointerup']
   )
 })
