@@ -1,9 +1,9 @@
 import EventEmitter from 'bare-events'
 import NativeNode = require('./node')
 
-/** A window of the platform, whose content is a tree of nodes. */
+/** A platform window whose content is a tree of nodes. */
 interface NativeWindow extends EventEmitter<NativeWindow.Events> {
-  /** The window of the platform toolkit. */
+  /** The platform toolkit window. */
   readonly native: unknown
 
   /** The root passed to `content()`, or `null` before that. */
@@ -15,17 +15,17 @@ interface NativeWindow extends EventEmitter<NativeWindow.Events> {
   /** The size of the content area, or zero before `content()`. */
   readonly size: NativeNode.Size
 
-  /** How many pixels a point is on the display the window is on, which layout is rounded to. */
+  /** Pixels per point on the window's display, which layout is rounded to. */
   readonly scale: number
 
   show(): this
 
-  /** Make `view` the root of the window and lay it out at the size of the window. */
+  /** Make `view` the root and lay it out at the window size. */
   content(view: NativeNode.Any): this
 
   /**
-   * Lay out the content at the size of the window now. A tree is laid out again by itself after
-   * every change to it, so this is rarely needed.
+   * Lay out the content now. A tree is laid out again after every change, so this is rarely
+   * needed.
    */
   layout(): void
 }

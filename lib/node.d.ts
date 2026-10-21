@@ -19,8 +19,8 @@ interface NativeNode<
   readonly children: C[]
 
   /**
-   * The style last set, flattened. Setting it replaces the whole style, so a property that is left
-   * out goes back to its default. Throws on a property the node does not accept.
+   * The style last set, flattened. Setting it replaces the whole style, resetting omitted
+   * properties. Throws on a property the node does not accept.
    */
   get style(): NativeStyleSheet.Style | null
   set style(value: NativeStyleSheet.StyleProp)
@@ -31,15 +31,14 @@ interface NativeNode<
 
   /**
    * Place the node beside another node or a rectangle, as for a tooltip or a popover, or `null` to
-   * lay it out as usual. The node should be absolutely positioned. It is sized by the layout and
-   * placed in the same pass, on the other side if it does not fit, and over the target, inside
-   * its edge by `offset`, if it fits on neither. It is kept inside the border of its parent. It
-   * follows the scroll views between it and what it is placed beside, but not transforms, and is
-   * hidden while a scroll view or a box that clips has cut what it is placed beside out of view.
+   * lay it out as usual. The node should be absolutely positioned. It flips to the other side if
+   * it does not fit, and covers the target, inset by `offset`, if it fits on neither. It is kept
+   * inside the border of its parent, follows scroll views but not transforms, and is hidden while
+   * the target is clipped out of view.
    *
-   * A node anchored inside another anchored node follows that one instead of deciding for itself:
-   * it flips if the other flipped, may stand out of it, and is given no size if the other had to
-   * cover what it was placed beside. That is how an arrow on the edge of a tooltip is made.
+   * A node anchored inside another anchored node follows that one: it flips if the other flipped,
+   * may stand out of it, and gets no size if the other covers its target. This is how an arrow on
+   * the edge of a tooltip is made.
    */
   get anchor(): NativeNode.Anchor | null
   set anchor(value: NativeNode.AnchorOptions | null)

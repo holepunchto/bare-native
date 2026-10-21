@@ -118,8 +118,7 @@ test('controls measure to a natural size', async (t) => {
   t.ok(toggle.measure().height > 0, 'and a height')
 })
 
-// A second input, because Windows keeps focus on the only control that can
-// take it.
+// A second input, as Windows keeps focus on the only focusable control.
 test('focusing and blurring an input is reported', async (t) => {
   const input = new TextInput()
   const root = view({ padding: 10 }, [input, new TextInput()])

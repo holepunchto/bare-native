@@ -11,5 +11,5 @@ require('./test/web-view')
 require('./test/window')
 require('./test/platform')
 
-// Last, as on Android the overlay replaces the window the other tests share.
+// Last, as on Android the overlay replaces the shared window.
 require('./test/overlay')

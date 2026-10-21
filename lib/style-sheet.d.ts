@@ -1,9 +1,6 @@
 /** A set of styles validated once and frozen, so that they can be passed around by reference. */
 declare class NativeStyleSheet {
-  /**
-   * Validate `styles` and freeze each of them, and the set itself, in place. Throws on a property
-   * that no node accepts.
-   */
+  /** Validate and freeze `styles` and each style in place. Throws on a property no node accepts. */
   static create<T extends Record<string, NativeStyleSheet.Style>>(
     styles: T
   ): { readonly [K in keyof T]: Readonly<T[K]> }
@@ -20,7 +17,7 @@ declare namespace NativeStyleSheet {
     | 'safe-area-inset-left'
     | 'keyboard-inset-height'
 
-  /** A value that follows a variable of the environment of the root, such as `env(safe-area-inset-top)`. */
+  /** A variable of the root environment, such as `env(safe-area-inset-top)`. */
   export type Env = `env(${EnvName})`
 
   /** A length in points, or dp on Android. */

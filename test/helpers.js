@@ -27,8 +27,8 @@ exports.mount = async function mount(t, root) {
   return window
 }
 
-// A layout is rounded to pixels, which a point is not always a whole number
-// of.
+// Layout is rounded to pixels, and a point is not always a whole number of
+// them.
 exports.near = function near(t, actual, expected, message) {
   const pixel = 1 / Dimensions.get('window').scale
 
@@ -55,8 +55,7 @@ exports.turn = function turn() {
   return new Promise((resolve) => setTimeout(resolve, 0))
 }
 
-// A pointer that presses nodes at points in the units the tree is laid out in.
-// Android's views take pixels rather than dp.
+// Android views take pixels rather than dp.
 exports.pointer = function pointer(t) {
   const pointer = new Pointer()
   const scale = Bare.platform === 'android' ? Dimensions.get('window').scale : 1
