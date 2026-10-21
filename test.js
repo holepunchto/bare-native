@@ -1,5 +1,6 @@
 require('./test/style')
 require('./test/tree')
+require('./test/view')
 require('./test/layout')
 require('./test/transform')
 require('./test/text')

@@ -1,4 +1,5 @@
 const { afterAnimationFrame } = require('bare-animation-frame')
+const Pointer = require('bare-pointer')
 const { Dimensions, View, Window } = require('..')
 
 // A window cannot be closed, and iOS and Android only have one, so the tests
@@ -52,4 +53,22 @@ exports.view = function view(style = {}, children = []) {
 
 exports.turn = function turn() {
   return new Promise((resolve) => setTimeout(resolve, 0))
+}
+
+// A pointer that presses nodes at points in the units the tree is laid out in.
+// Android's views take pixels rather than dp.
+exports.pointer = function pointer(t) {
+  const pointer = new Pointer()
+  const scale = Bare.platform === 'android' ? Dimensions.get('window').scale : 1
+
+  t.teardown(() => pointer.destroy())
+
+  const at = (value) => (value === undefined ? undefined : value * scale)
+
+  return {
+    down: (node, x, y) => pointer.down(node.native, at(x), at(y)),
+    move: (node, x, y) => pointer.move(node.native, at(x), at(y)),
+    up: () => pointer.up(),
+    tap: (node, x, y) => pointer.tap(node.native, at(x), at(y))
+  }
 }

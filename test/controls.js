@@ -1,7 +1,7 @@
 const { test } = require('bare-tap')
 const { afterAnimationFrame } = require('bare-animation-frame')
 const { ActivityIndicator, Switch, TextInput } = require('..')
-const { mount, turn, view } = require('./helpers')
+const { mount, pointer, turn, view } = require('./helpers')
 
 test('writing a value from code emits nothing', async (t) => {
   const input = new TextInput()
@@ -83,6 +83,27 @@ test('writing a switch from code emits nothing', async (t) => {
   t.strictEqual(changes, 0)
 })
 
+test('pressing a switch turns it on', async (t) => {
+  const toggle = new Switch()
+  const root = view({ padding: 10, alignItems: 'flex-start' }, [toggle])
+
+  await mount(t, root)
+
+  const press = pointer(t)
+
+  const changes = []
+
+  toggle.on('change', (value) => changes.push(value))
+
+  await press.tap(toggle)
+
+  // A GTK switch only changes once its animation has finished.
+  for (let i = 0; i < 30 && changes.length === 0; i++) await afterAnimationFrame()
+
+  t.deepStrictEqual(changes, [true], 'emitted the new value')
+  t.strictEqual(toggle.value, true, 'on')
+})
+
 test('controls measure to a natural size', async (t) => {
   const input = new TextInput()
   const toggle = new Switch()
@@ -119,6 +140,24 @@ test('focusing and blurring an input is reported', async (t) => {
   await afterAnimationFrame()
 
   t.deepStrictEqual(events, ['focus', 'blur'])
+})
+
+test('pressing an input focuses it', async (t) => {
+  const input = new TextInput()
+  const root = view({ padding: 10 }, [input, new TextInput()])
+
+  await mount(t, root)
+
+  const press = pointer(t)
+
+  const events = []
+
+  input.on('focus', () => events.push('focus'))
+
+  await press.tap(input)
+  await afterAnimationFrame()
+
+  t.deepStrictEqual(events, ['focus'])
 })
 
 test('a selection is read back from a focused input', async (t) => {
@@ -180,6 +219,28 @@ test('a switch can be disabled', (t) => {
   toggle.enabled = false
 
   t.strictEqual(toggle.enabled, false)
+})
+
+test('pressing a disabled switch does nothing', async (t) => {
+  const toggle = new Switch()
+  const root = view({ padding: 10, alignItems: 'flex-start' }, [toggle])
+
+  toggle.enabled = false
+
+  await mount(t, root)
+
+  const press = pointer(t)
+
+  let changes = 0
+
+  toggle.on('change', () => changes++)
+
+  await press.tap(toggle)
+
+  for (let i = 0; i < 30; i++) await afterAnimationFrame()
+
+  t.strictEqual(changes, 0, 'emitted nothing')
+  t.strictEqual(toggle.value, false, 'off')
 })
 
 test('an activity indicator has a natural size', (t) => {
