@@ -73,6 +73,42 @@ async function press(t, shown, label) {
 
   await new AnimationFrameProvider(node.native).afterAnimationFrame()
 
+  // TEMPORARY: diagnoses the overlay presses on the macOS runner.
+  if (Bare.platform === 'darwin') {
+    const AppKitApplication = require('bare-app-kit/application')
+    const view = node.native
+    const window = view.window
+    const state = () =>
+      JSON.stringify({
+        active: AppKitApplication.active,
+        key: window.keyWindow,
+        main: window.mainWindow,
+        visible: window.visible,
+        canBecomeKey: window.canBecomeKeyWindow,
+        windowNumber: window.windowNumber,
+        frame: window.frame
+      })
+
+    console.log('DIAGNOSTIC', label, 'before', state())
+    console.log(
+      'DIAGNOSTIC',
+      label,
+      'bounds',
+      JSON.stringify(view.bounds),
+      'point',
+      JSON.stringify(view.convertPointToView(view.bounds.width / 2, view.bounds.height / 2, null))
+    )
+
+    view.on('mouseDown', (e) => console.log('DIAGNOSTIC', label, 'mouseDown', JSON.stringify(e)))
+    view.on('mouseUp', (e) => console.log('DIAGNOSTIC', label, 'mouseUp', JSON.stringify(e)))
+
+    await pointer(t).tap(node)
+
+    console.log('DIAGNOSTIC', label, 'after', state())
+
+    return
+  }
+
   await pointer(t).tap(node)
 }
 
