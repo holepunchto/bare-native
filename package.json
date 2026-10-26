@@ -169,7 +169,7 @@
   },
   "homepage": "https://github.com/holepunchto/bare-native#readme",
   "dependencies": {
-    "bare-app-kit": "^0.3.1",
+    "bare-app-kit": "^0.3.4",
     "bare-core-animation": "^0.1.2",
     "bare-core-text": "^0.1.0",
     "bare-events": "^2.8.2",
@@ -186,7 +186,7 @@
     "bare-abort-controller": "^1.1.2",
     "bare-animation-frame": "^0.1.1",
     "bare-native-test": "^0.1.4",
-    "bare-pointer": "^0.1.4",
+    "bare-pointer": "^0.1.7",
     "bare-tap": "^1.1.0",
     "lunte": "^1.8.0",
     "prettier": "^3.4.2",
