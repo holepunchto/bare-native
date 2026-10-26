@@ -72,107 +72,6 @@ async function press(t, shown, label) {
 
   await new AnimationFrameProvider(node.native).afterAnimationFrame()
 
-  // TEMPORARY: diagnoses dropped overlay presses on the macOS runner.
-  if (Bare.platform === 'darwin') {
-    const AppKitApplication = require('bare-app-kit/application')
-    const AppKitEvent = require('bare-app-kit/event')
-    const view = node.native
-    const window = view.window
-    const root = shown.window.contentView.native
-    const start = Date.now()
-    const lines = []
-    let released = false
-
-    const state = () => {
-      const key = AppKitApplication.keyWindow
-
-      return JSON.stringify({
-        ms: Date.now() - start,
-        active: AppKitApplication.active,
-        key: window.keyWindow,
-        main: window.mainWindow,
-        visible: window.visible,
-        windowNumber: window.windowNumber,
-        appKey: key ? key.windowNumber : null
-      })
-    }
-
-    const log = (...args) => lines.push(['DIAGNOSTIC', label, ...args].join(' '))
-
-    const center = view.convertPointToView(view.bounds.width / 2, view.bounds.height / 2, null)
-    const frame = root.superview
-
-    const hit = (x = center.x, y = center.y) => {
-      const found = frame === null ? null : frame.hitTest(x, y)
-
-      if (found === null) return 'null'
-
-      const { width, height } = found.bounds
-
-      return JSON.stringify([found.constructor.name, width, height])
-    }
-
-    log('point', JSON.stringify(center), 'button', JSON.stringify(view.bounds), 'hit', hit())
-
-    const { LEFT_MOUSE_DOWN, LEFT_MOUSE_UP } = AppKitEvent.MASK
-
-    const monitor =
-      typeof AppKitEvent.addLocalMonitorForEventsMatchingMask === 'function'
-        ? AppKitEvent.addLocalMonitorForEventsMatchingMask(
-            LEFT_MOUSE_DOWN | LEFT_MOUSE_UP,
-            (event) => {
-              const { x, y } = event.locationInWindow
-
-              log(
-                'dispatched',
-                event.type,
-                'window',
-                event.windowNumber,
-                'at',
-                JSON.stringify({ x, y }),
-                'hit',
-                hit(x, y),
-                state()
-              )
-
-              return event
-            }
-          )
-        : null
-
-    log('monitor', monitor === null ? 'unavailable' : 'added')
-
-    log('before', state())
-
-    for (const [name, target] of [
-      ['button', view],
-      ['root', root]
-    ]) {
-      target.on('mouseDown', (e) => log(name, 'mouseDown', state(), JSON.stringify(e)))
-      target.on('mouseUp', (e) => log(name, 'mouseUp', state(), JSON.stringify(e)))
-    }
-
-    node.on('pointerdown', () => log('pointerdown', state()))
-    node.on('pointerup', () => {
-      released = true
-      log('pointerup', state())
-    })
-
-    try {
-      await pointer(t).tap(node)
-    } catch (err) {
-      log('threw', err.message)
-    }
-
-    if (monitor !== null) AppKitEvent.removeMonitor(monitor)
-
-    log('after', state(), 'hit', hit())
-
-    if (!released) for (const line of lines) console.log(line)
-
-    return
-  }
-
   await pointer(t).tap(node)
 }
 
@@ -329,28 +228,25 @@ test('a failure after the overlay was taken away is shown again', (t) => {
   t.ok(drawn(shown.window.contentView).includes('Error: second'))
 })
 
-// TEMPORARY: repeats the presses to catch the macOS flake.
-for (let round = 0; round < (Bare.platform === 'darwin' ? 20 : 1); round++) {
-  test('pressing Dismiss takes the failure away', async (t) => {
-    const { host, shown } = setup(t)
+test('pressing Dismiss takes the failure away', async (t) => {
+  const { host, shown } = setup(t)
 
-    host.fail({})
+  host.fail({})
 
-    await press(t, shown, 'Dismiss')
+  await press(t, shown, 'Dismiss')
 
-    t.strictEqual(shown.shown, false, 'hidden')
+  t.strictEqual(shown.shown, false, 'hidden')
 
-    // Android only gets the application back by reloading it.
-    t.strictEqual(host.reloads, Bare.platform === 'android' ? 1 : 0, 'reloaded where it has to')
-  })
+  // Android only gets the application back by reloading it.
+  t.strictEqual(host.reloads, Bare.platform === 'android' ? 1 : 0, 'reloaded where it has to')
+})
 
-  test('pressing Reload reloads the application', async (t) => {
-    const { host, shown } = setup(t)
+test('pressing Reload reloads the application', async (t) => {
+  const { host, shown } = setup(t)
 
-    host.fail({})
+  host.fail({})
 
-    await press(t, shown, 'Reload')
+  await press(t, shown, 'Reload')
 
-    t.strictEqual(host.reloads, 1)
-  })
-}
+  t.strictEqual(host.reloads, 1)
+})
