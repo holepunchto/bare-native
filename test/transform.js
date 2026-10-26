@@ -60,39 +60,112 @@ test('a transform does not move the layout', (t) => {
   t.strictEqual(child.measure().x, 0)
 })
 
-test('a translation moves where a node lands in the window', async (t) => {
-  const child = view({ width: 10, height: 10 })
-  const root = view({ padding: 10 }, [child])
+// TEMPORARY: diagnoses translations that are not measured after a frame on
+// Windows.
+const settled = {}
 
-  await mount(t, root)
+async function frame(child, label, expected) {
+  if (Bare.platform !== 'win32') {
+    await afterAnimationFrame()
 
-  const before = child.measure().pageX
-
-  child.style = { width: 10, height: 10, transform: [{ translateX: 30 }] }
-
-  await afterAnimationFrame()
-
-  near(t, child.measure().pageX, before + 30)
-})
-
-test('a translation by a percentage is of the node itself', async (t) => {
-  const child = view({ width: 40, height: 20 })
-  const root = view({ padding: 10 }, [child])
-
-  await mount(t, root)
-
-  const before = child.measure()
-
-  child.style = {
-    width: 40,
-    height: 20,
-    transform: [{ translateX: '-50%' }, { translateY: '50%' }]
+    return child.measure()
   }
 
+  const WinUIElementCompositionPreview = require('bare-win-ui/element-composition-preview')
+
+  const visual = WinUIElementCompositionPreview.getElementVisual(child.native)
+  const start = Date.now()
+  const lines = []
+
+  const log = (...args) =>
+    lines.push(['DIAGNOSTIC', label, `${Date.now() - start}ms`, ...args].join(' '))
+
+  const matches = (measured) =>
+    Object.keys(expected).every((key) => Math.abs(measured[key] - expected[key]) <= 1)
+
+  const sample = (name) => {
+    const measured = child.measure()
+
+    log(
+      name,
+      JSON.stringify({ pageX: measured.pageX, pageY: measured.pageY }),
+      'matrix',
+      JSON.stringify(visual.transformMatrix)
+    )
+
+    return measured
+  }
+
+  sample('immediately')
+
   await afterAnimationFrame()
 
-  const after = child.measure()
+  const first = sample('frame 1')
 
-  near(t, after.pageX, before.pageX - 20)
-  near(t, after.pageY, before.pageY + 10)
-})
+  let frames = 1
+
+  if (!matches(first)) {
+    for (frames = 2; frames <= 10; frames++) {
+      await afterAnimationFrame()
+
+      if (matches(sample(`frame ${frames}`))) break
+    }
+
+    for (const line of lines) console.log(line)
+  }
+
+  settled[frames] = (settled[frames] || 0) + 1
+
+  return first
+}
+
+// TEMPORARY: repeats the translations to catch the Windows flake.
+for (let round = 0; round < (Bare.platform === 'win32' ? 20 : 1); round++) {
+  test('a translation moves where a node lands in the window', async (t) => {
+    const child = view({ width: 10, height: 10 })
+    const root = view({ padding: 10 }, [child])
+
+    await mount(t, root)
+
+    const before = child.measure().pageX
+
+    child.style = { width: 10, height: 10, transform: [{ translateX: 30 }] }
+
+    const after = await frame(child, `translation ${round}`, { pageX: before + 30 })
+
+    near(t, after.pageX, before + 30)
+  })
+
+  test('a translation by a percentage is of the node itself', async (t) => {
+    const child = view({ width: 40, height: 20 })
+    const root = view({ padding: 10 }, [child])
+
+    await mount(t, root)
+
+    const before = child.measure()
+
+    child.style = {
+      width: 40,
+      height: 20,
+      transform: [{ translateX: '-50%' }, { translateY: '50%' }]
+    }
+
+    const after = await frame(child, `percentage ${round}`, {
+      pageX: before.pageX - 20,
+      pageY: before.pageY + 10
+    })
+
+    near(t, after.pageX, before.pageX - 20)
+    near(t, after.pageY, before.pageY + 10)
+  })
+}
+
+test(
+  'TEMPORARY: frames until translations were measured',
+  { skip: Bare.platform !== 'win32' },
+  (t) => {
+    console.log('DIAGNOSTIC settled', JSON.stringify(settled))
+
+    t.pass()
+  }
+)
