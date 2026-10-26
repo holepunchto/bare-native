@@ -75,6 +75,7 @@ async function press(t, shown, label) {
   // TEMPORARY: diagnoses dropped overlay presses on the macOS runner.
   if (Bare.platform === 'darwin') {
     const AppKitApplication = require('bare-app-kit/application')
+    const AppKitEvent = require('bare-app-kit/event')
     const view = node.native
     const window = view.window
     const root = shown.window.contentView.native
@@ -98,6 +99,49 @@ async function press(t, shown, label) {
 
     const log = (...args) => lines.push(['DIAGNOSTIC', label, ...args].join(' '))
 
+    const center = view.convertPointToView(view.bounds.width / 2, view.bounds.height / 2, null)
+    const frame = root.superview
+
+    const hit = (x = center.x, y = center.y) => {
+      const found = frame === null ? null : frame.hitTest(x, y)
+
+      if (found === null) return 'null'
+
+      const { width, height } = found.bounds
+
+      return JSON.stringify([found.constructor.name, width, height])
+    }
+
+    log('point', JSON.stringify(center), 'button', JSON.stringify(view.bounds), 'hit', hit())
+
+    const { LEFT_MOUSE_DOWN, LEFT_MOUSE_UP } = AppKitEvent.MASK
+
+    const monitor =
+      typeof AppKitEvent.addLocalMonitorForEventsMatchingMask === 'function'
+        ? AppKitEvent.addLocalMonitorForEventsMatchingMask(
+            LEFT_MOUSE_DOWN | LEFT_MOUSE_UP,
+            (event) => {
+              const { x, y } = event.locationInWindow
+
+              log(
+                'dispatched',
+                event.type,
+                'window',
+                event.windowNumber,
+                'at',
+                JSON.stringify({ x, y }),
+                'hit',
+                hit(x, y),
+                state()
+              )
+
+              return event
+            }
+          )
+        : null
+
+    log('monitor', monitor === null ? 'unavailable' : 'added')
+
     log('before', state())
 
     for (const [name, target] of [
@@ -120,7 +164,9 @@ async function press(t, shown, label) {
       log('threw', err.message)
     }
 
-    log('after', state())
+    if (monitor !== null) AppKitEvent.removeMonitor(monitor)
+
+    log('after', state(), 'hit', hit())
 
     if (!released) for (const line of lines) console.log(line)
 
