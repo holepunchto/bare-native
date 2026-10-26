@@ -63,6 +63,31 @@ test('a transform does not move the layout', (t) => {
 // TEMPORARY: diagnoses translations that are not measured after a frame on
 // Windows.
 const settled = {}
+const timeline = []
+
+if (Bare.platform === 'win32') {
+  const CompositionTarget = require('bare-win-ui/composition-target')
+
+  const { _onrendering, on, off } = CompositionTarget
+
+  CompositionTarget._onrendering = function (renderingTime) {
+    timeline.push([Date.now(), `rendering ${renderingTime.toFixed(3)}`])
+
+    return _onrendering.call(this, renderingTime)
+  }
+
+  CompositionTarget.on = function (name, fn) {
+    if (name === 'rendering') timeline.push([Date.now(), 'subscribe'])
+
+    return on.call(this, name, fn)
+  }
+
+  CompositionTarget.off = function (name, fn) {
+    if (name === 'rendering') timeline.push([Date.now(), 'unsubscribe'])
+
+    return off.call(this, name, fn)
+  }
+}
 
 async function frame(child, label, expected) {
   if (Bare.platform !== 'win32') {
@@ -109,6 +134,10 @@ async function frame(child, label, expected) {
       await afterAnimationFrame()
 
       if (matches(sample(`frame ${frames}`))) break
+    }
+
+    for (const [time, event] of timeline) {
+      if (time >= start - 100) log('timeline', `${time - start}ms`, event)
     }
 
     for (const line of lines) console.log(line)
