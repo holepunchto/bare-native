@@ -1,7 +1,6 @@
 const { test } = require('bare-tap')
-const { afterAnimationFrame } = require('bare-animation-frame')
 const { View } = require('..')
-const { mount, near, view } = require('./helpers')
+const { afterAnimationFrame, mount, near, view } = require('./helpers')
 
 test('a transform is a list of operations', (t) => {
   const node = new View()
