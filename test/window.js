@@ -1,5 +1,5 @@
 const { test } = require('bare-tap')
-const { Appearance, Dimensions } = require('..')
+const { Appearance, Dimensions, Window } = require('..')
 const { mount, near, pointer, view } = require('./helpers')
 
 test('a window lays out its content at its size', async (t) => {
@@ -91,3 +91,37 @@ test('the environment defaults to zero', (t) => {
 
   t.strictEqual(node.env['keyboard-inset-height'], 0)
 })
+
+function visible(window) {
+  const native = window.native
+
+  switch (Bare.platform) {
+    case 'win32':
+      return native.appWindow.isVisible
+    case 'ios':
+      return !native.hidden
+    default:
+      return native.visible
+  }
+}
+
+// iOS and Android only have one window.
+test(
+  'a window is hidden and shown again',
+  { skip: Bare.platform === 'ios' || Bare.platform === 'android' },
+  (t) => {
+    const window = new Window(200, 150).content(view({ flex: 1 })).show()
+
+    t.teardown(() => window.hide())
+
+    t.ok(visible(window), 'shown')
+
+    window.hide()
+
+    t.notOk(visible(window), 'hidden')
+
+    window.show()
+
+    t.ok(visible(window), 'shown again')
+  }
+)

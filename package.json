@@ -44,11 +44,8 @@
       "win32": "./lib/text-input/win32.js"
     },
     "#overlay": {
-      "darwin": "./lib/overlay/darwin.js",
-      "ios": "./lib/overlay/ios.js",
-      "linux": "./lib/overlay/linux.js",
       "android": "./lib/overlay/android.js",
-      "win32": "./lib/overlay/win32.js"
+      "default": "./lib/overlay/default.js"
     },
     "#path": {
       "darwin": "./lib/path/darwin.js",
@@ -179,14 +176,14 @@
     "bare-url": "^2.5.4",
     "bare-web-kit": "^0.2.0",
     "bare-web-kit-gtk": "^0.4.0",
-    "bare-win-ui": "^0.3.7",
+    "bare-win-ui": "^0.3.9",
     "bare-yoga": "^0.1.2"
   },
   "devDependencies": {
     "bare-abort-controller": "^1.1.2",
     "bare-animation-frame": "^0.1.1",
     "bare-native-test": "^0.1.4",
-    "bare-pointer": "^0.1.7",
+    "bare-pointer": "^0.1.8",
     "bare-tap": "^1.1.0",
     "lunte": "^1.8.0",
     "prettier": "^3.4.2",
