@@ -1,4 +1,4 @@
-const { afterAnimationFrame } = require('bare-animation-frame')
+const AnimationFrameProvider = require('bare-animation-frame')
 const Pointer = require('bare-pointer')
 const { Dimensions, View, Window } = require('..')
 
@@ -6,12 +6,14 @@ const { Dimensions, View, Window } = require('..')
 // share a window and swap its content.
 let window = null
 let empty = null
+let frames = null
 
 // GTK and XAML only place new content on their next frame.
 exports.mount = async function mount(t, root) {
   if (window === null) {
     empty = new View()
     window = new Window(400, 300).content(empty).show()
+    frames = new AnimationFrameProvider(window.native)
   }
 
   window.content(root)
@@ -22,9 +24,15 @@ exports.mount = async function mount(t, root) {
     root.destroy()
   })
 
-  await afterAnimationFrame()
+  await exports.afterAnimationFrame()
 
   return window
+}
+
+// GTK otherwise times frames by its active window, which can be one that has
+// since been hidden.
+exports.afterAnimationFrame = function afterAnimationFrame() {
+  return frames.afterAnimationFrame()
 }
 
 // Layout is rounded to pixels, and a point is not always a whole number of

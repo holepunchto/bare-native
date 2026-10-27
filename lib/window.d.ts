@@ -20,6 +20,9 @@ interface NativeWindow extends EventEmitter<NativeWindow.Events> {
 
   show(): this
 
+  /** On Android the activity cannot be hidden, so this does nothing. */
+  hide(): this
+
   /** Make `view` the root and lay it out at the window size. */
   content(view: NativeNode.Any): this
 

@@ -1,7 +1,6 @@
 const { test } = require('bare-tap')
-const { afterAnimationFrame } = require('bare-animation-frame')
 const { Appearance, Clipboard, Keyboard } = require('..')
-const { mount, view } = require('./helpers')
+const { afterAnimationFrame, mount, view } = require('./helpers')
 
 // Android applies a declared scheme at most once per run.
 test(

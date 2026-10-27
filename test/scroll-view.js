@@ -1,7 +1,6 @@
 const { test } = require('bare-tap')
-const { afterAnimationFrame } = require('bare-animation-frame')
 const { ScrollView } = require('..')
-const { mount, near, view } = require('./helpers')
+const { afterAnimationFrame, mount, near, view } = require('./helpers')
 
 // Taller than the window on every platform.
 const ROWS = 40

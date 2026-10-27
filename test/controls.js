@@ -1,7 +1,6 @@
 const { test } = require('bare-tap')
-const { afterAnimationFrame } = require('bare-animation-frame')
 const { ActivityIndicator, Switch, TextInput } = require('..')
-const { mount, pointer, turn, view } = require('./helpers')
+const { afterAnimationFrame, mount, pointer, turn, view } = require('./helpers')
 
 test('writing a value from code emits nothing', async (t) => {
   const input = new TextInput()
